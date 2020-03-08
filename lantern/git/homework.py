@@ -15,7 +15,10 @@ def is_two_object_has_same_value(first: Any, second: Any) -> bool:
     If @first and @second has same value should return True
     In another case should return False
     """
-    pass
+    if (isinstance(first, list) | isinstance(first, tuple) | isinstance(first, set)) & (isinstance(second, list) | isinstance(second, tuple) | isinstance(second, set)):
+        return set(first).issuperset(set(second))
+    else:
+        return first == second
 
 
 def is_two_objects_has_same_type(first: Any, second: Any) -> bool:
@@ -23,7 +26,10 @@ def is_two_objects_has_same_type(first: Any, second: Any) -> bool:
     If @first and @second has same type should return True
     In another case should return False
     """
-    pass
+    if type(first) == type(second):
+        return True
+    else:
+        return False
 
 
 def is_two_objects_is_the_same_objects(first: Any, second: Any) -> bool:
@@ -31,7 +37,10 @@ def is_two_objects_is_the_same_objects(first: Any, second: Any) -> bool:
     If @first and @second has same type should return True
     In another case should return False
     """
-    pass
+    if first is second:
+        return True
+    else:
+        return False
 
 
 def multiple_ints(first_value: int, second_value: int) -> int:
@@ -48,7 +57,13 @@ def multiple_ints(first_value: int, second_value: int) -> int:
     Returns:
         Product of elements
     """
-    pass
+
+    if isinstance(first_value, bool) or isinstance(second_value, bool) is True:
+        raise Exception(TypeError)
+    elif isinstance(first_value, int) and isinstance(second_value, int) is True:
+        return first_value * second_value
+    else:
+        raise Exception(TypeError)
 
 
 def multiple_ints_with_conversion(first_value: Any, second_value: Any) -> int:
@@ -67,18 +82,28 @@ def multiple_ints_with_conversion(first_value: Any, second_value: Any) -> int:
 
     Examples:
         multiple_ints_with_conversion(6, 6)
-        >>> 36
+     #   >>> 36
         multiple_ints_with_conversion(2, 2.0)
-        >>> 4
+      #  >>> 4
         multiple_ints_with_conversion("12", 1)
-        >>> 12
+       # >>> 12
         try:
             multiple_ints_with_conversion("Hello", 2)
         except ValueError:
             print("Not valid input data")
-        >>> "Not valid input data"
+       # >>> "Not valid input data"
     """
-    pass
+    try:
+        first_value = int(first_value)
+        second_value = int(second_value)
+        return first_value * second_value
+    except ValueError:
+        raise Exception(ValueError)
+
+
+
+
+
 
 
 def is_word_in_text(word: str, text: str) -> bool:
@@ -92,19 +117,27 @@ def is_word_in_text(word: str, text: str) -> bool:
 
     Examples:
         is_word_in_text("Hello", "Hello word")
-        >>> True
+     #   >>> True
         is_word_in_text("Glad", "Nice to meet you ")
-        >>> False
+      #  >>> False
 
     """
-    pass
+    if word in text:
+        return True
+    else:
+        return False
 
 
 def some_loop_exercise() -> list:
     """
     Use loop to create list that contain int values from 0 to 12 except 6 and 7
     """
-    pass
+    l_i = []
+    chk = [6, 7]
+    for x in range(0, 13):
+        if x not in chk:
+            l_i.append(x)
+    return l_i
 
 
 def remove_from_list_all_negative_numbers(data: List[int]) -> list:
@@ -114,9 +147,13 @@ def remove_from_list_all_negative_numbers(data: List[int]) -> list:
     Also you could create new list with only positive numbers.
     Examples:
         remove_from_list_all_negative_numbers([1, 5, -7, 8, -1])
-        >>> [1, 5, 8]
+     #   >>> [1, 5, 8]
     """
-    pass
+    i = []
+    for x in data:
+        if x >= 0:
+            i.append(x)
+    return i
 
 
 def alphabet() -> dict:
@@ -125,9 +162,13 @@ def alphabet() -> dict:
     Notes You could see an implementaion of this one in test, but create another one
     Examples:
         alphabet()
-        >>> {"a": 1, "b": 2 ...}
+     #   >>> {"a": 1, "b": 2 ...}
     """
-    pass
+
+    dic_l = {}
+    for i in range(1, 27):
+        dic_l.update({chr(i + 96): i})
+    return dic_l
 
 
 def simple_sort(data: List[int]) -> List[list]:
@@ -135,6 +176,14 @@ def simple_sort(data: List[int]) -> List[list]:
     Sort list of ints without using built-in methods.
     Examples:
         simple_sort([2, 9, 6, 7, 3, 2, 1])
-        >>> [1, 2, 2, 3, 6, 7, 9]
+     #   >>> [1, 2, 2, 3, 6, 7, 9]
     """
-    pass
+    result = data
+    for i in range(len(result) - 1):
+        for j in range(len(result) - i - 1):
+            if data[j] > result[j + 1]:
+                t_v = result[j]
+                result[j] = result[j + 1]
+                result[j + 1] = t_v
+    return result
+
