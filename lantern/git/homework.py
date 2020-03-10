@@ -53,7 +53,9 @@ def multiple_ints(first_value: int, second_value: int) -> int:
         Product of elements
     """
 
-    if type(first_value) == type(second_value) == int:
+    if isinstance(first_value, bool) or isinstance(second_value, bool) is True:
+        raise Exception(TypeError)
+    elif isinstance(first_value, int) and isinstance(second_value, int) is True:
         return first_value * second_value
     else:
         raise Exception(TypeError)
@@ -87,10 +89,10 @@ def multiple_ints_with_conversion(first_value: Any, second_value: Any) -> int:
        # >>> "Not valid input data"
     """
     try:
-        first_value = int(first_value)
-        second_value = int(second_value)
-        return first_value * second_value
-    except ValueError:
+        first_value_c = int(first_value)
+        second_value_c = int(second_value)
+        return first_value_c * second_value_c
+    except (ValueError, TypeError):
         raise Exception(ValueError)
 
 
@@ -168,7 +170,7 @@ def simple_sort(data: List[int]) -> List[list]:
         simple_sort([2, 9, 6, 7, 3, 2, 1])
      #   >>> [1, 2, 2, 3, 6, 7, 9]
     """
-    result = data
+    result = data [ : ]
     for i in range(len(result) - 1):
         for j in range(len(result) - i - 1):
             if data[j] > result[j + 1]:
