@@ -96,11 +96,6 @@ def multiple_ints_with_conversion(first_value: Any, second_value: Any) -> int:
         raise Exception(ValueError)
 
 
-
-
-
-
-
 def is_word_in_text(word: str, text: str) -> bool:
     """
     If text contain word return True
@@ -124,12 +119,9 @@ def some_loop_exercise() -> list:
     """
     Use loop to create list that contain int values from 0 to 12 except 6 and 7
     """
-    l_i = []
     chk = [6, 7]
-    for x in range(0, 13):
-        if x not in chk:
-            l_i.append(x)
-    return l_i
+
+    return [x for x in range(0, 13) if x not in chk]
 
 
 def remove_from_list_all_negative_numbers(data: List[int]) -> list:
@@ -141,11 +133,7 @@ def remove_from_list_all_negative_numbers(data: List[int]) -> list:
         remove_from_list_all_negative_numbers([1, 5, -7, 8, -1])
      #   >>> [1, 5, 8]
     """
-    i = []
-    for x in data:
-        if x >= 0:
-            i.append(x)
-    return i
+    return [x for x in data if x >= 0]
 
 
 def alphabet() -> dict:
@@ -156,11 +144,7 @@ def alphabet() -> dict:
         alphabet()
      #   >>> {"a": 1, "b": 2 ...}
     """
-
-    dic_l = {}
-    for i in range(1, 27):
-        dic_l.update({chr(i + 96): i})
-    return dic_l
+    return {chr(96 + i) : i for i in range(1, 27)}
 
 
 def simple_sort(data: List[int]) -> List[list]:
@@ -170,12 +154,12 @@ def simple_sort(data: List[int]) -> List[list]:
         simple_sort([2, 9, 6, 7, 3, 2, 1])
      #   >>> [1, 2, 2, 3, 6, 7, 9]
     """
-    result = data [ : ]
+    result = data[:]
     for i in range(len(result) - 1):
         for j in range(len(result) - i - 1):
-            if data[j] > result[j + 1]:
-                t_v = result[j]
-                result[j] = result[j + 1]
-                result[j + 1] = t_v
+            if result[j] > result[j + 1]:
+                result[j], result[j + 1] = result[j + 1], result[j]
     return result
+
+
 
