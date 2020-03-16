@@ -50,7 +50,7 @@ class Cat:
     def _set_average_speed(self):
         if self.age <= 7:
             return 12
-        elif 7 < self.age <= 10:
+        elif self.age <= 10:
             return 9
         else:
             return 6
@@ -59,24 +59,21 @@ class Cat:
         km = self.average_speed * hours
         if km <= 25:
             self._reduce_saturation_level(2)
-        elif 25 < km <= 50:
+        elif km <= 50:
             self._reduce_saturation_level(5)
-        elif 50 < km <= 100:
+        elif km <= 100:
             self._reduce_saturation_level(15)
-        elif 100 < km <= 200:
+        elif km <= 200:
             self._reduce_saturation_level(25)
         else:
             self._reduce_saturation_level(50)
         return f"Your cat was ran {km} kilometers. :-)"
 
     def get_saturation_level(self):
-        if self.saturation_level > 0:
-            return f'The cat is saturated on: {self.saturation_level} %'
-        else:
-            return 'Your cat is dead :('
+        return self.saturation_level if self.saturation_level > 0 else 'Your cat is died :('
 
     def get_average_speed(self):
-        return f'The avg speed of the cat is: {self.average_speed} km/h'
+        return self.average_speed
 
 
 class Cheetah(Cat):
@@ -131,7 +128,8 @@ class Wall:
         return self.width * self.height
 
     def number_of_rolls_of_wallpaper(self, roll_width_m, roll_length_m):
-        return (self.width / roll_width_m) / (roll_length_m // self.height)
+        from math import floor
+        return floor(self.width / roll_width_m) / floor(roll_length_m / self.height)
 
 
 class Roof:
@@ -271,34 +269,45 @@ class House:
         self.__windows = []
         self.__roof = None
         self.__door = None
-    #Declare pet on the house :-)
+        # Declare pet on the house :-)
         self.__pet = None
 
     def create_wall(self, width, height):
         if width == 0 or height == 0:
-            raise ValueError ('Value must be not 0')
+            raise ValueError('Value must be not 0')
         if len(self.__walls) == 4:
-            raise ValueError ('Our house can not have more than 4 walls')
+            raise ValueError('Our house can not have more than 4 walls')
+
         self.__walls.append(Wall(width, height))
 
+        # is our house have rectangle or square form?
+        if len(self.__walls) == 4:
+            form_factor = []
+            for i_wall in self.__walls:
+                form_factor.append(i_wall.width)
+            if len(set(form_factor)) > 2:
+                self.__walls = []
+                raise ValueError ('Your are have not rectangle or square form factor :-(')
+
     def create_roof(self, width, height, roof_type):
-        if width == 0 or height == 0: raise ValueError ('Value must be not 0')
-        if self.__roof is not None: raise ValueError ('The house can not have two roofs')
-        if roof_type != 'gable' or 'single-pitch':
-            raise ValueError ('Sorry there is only two types of roofs: gable and single-pitch')
+        r_type = ['gable', 'single-pitch']
+        if width == 0 or height == 0: raise ValueError('Value must be not 0')
+        if self.__roof: raise ValueError('The house can not have two roofs')
+        if roof_type not in r_type:
+            raise ValueError('Sorry there is only two types of roofs: gable and single-pitch')
         self.__roof = Roof(width, height, roof_type)
 
     def create_window(self, width, height):
         if width == 0 or height == 0: raise ValueError('Value must be not 0')
-        self.__windows.append(Window(width,height))
+        self.__windows.append(Window(width, height))
 
     def create_door(self, width, height):
         if width == 0 or height == 0: raise ValueError('Value must be not 0')
-        if self.__door is not None: raise ValueError('The house can not have two doors')
+        if self.__door: raise ValueError('The house can not have two doors')
         self.__door = Door(width, height)
 
-    #Put pet on the house :-)
-    def __create_pet(self,age):
+    # Put pet on the house :-)
+    def __create_pet(self, age):
         self.__pet = Cat(age)
 
     def get_count_of_walls(self):
@@ -336,10 +345,49 @@ class House:
     def get_room_square(self):
         return self.get_walls_square() - self.get_windows_square() - self.get_door_square()
 
-    #Pet action :-)
-    def __damage_wallpapers (self, hours):
-        if self.__pet.run(hours) *1000 * 0.1 >= self.get_walls_square():
+    # Pet action :-)
+    def __damage_wallpapers(self, hours):
+        if self.__pet.run(hours) * 1000 * 0.1 >= self.get_walls_square():
             return 'Wallpapers is need repair!'
         else:
-            return f'Pet was damage {self.__pet.run(hours) *1000 * 0.1} sq.m of wallpapers'
+            return f'Pet was damage {self.__pet.run(hours) * 1000 * 0.1} sq.m of wallpapers'
+
+
+if __name__ == '__main__':
+    from math import floor
+    house = House()
+    try:
+        house.create_wall(11, 2.5)
+        house.create_wall(10, 2.5)
+        house.create_wall(15, 2.5)
+        house.create_wall(14, 2.5)
+    except ValueError:
+        print('try to create not rectangle house. everything ok')
+
+    house.create_wall(10, 2.5)
+    house.create_wall(10, 2.5)
+    house.create_wall(14, 2.5)
+    house.create_wall(14, 2.5)
+
+    try:
+        house.create_wall(14, 2.5)
+    except ValueError:
+        print('try to create fifth wall. everything ok')
+    try:
+        house.create_roof(10, 6, 'some type')
+    except ValueError:
+        print('try to create some_type roof . everything ok')
+
+    house.create_roof(10, 6, 'single-pitch')
+
+    house.create_door(1, 2)
+    house.create_window(3, 1)
+
+    print("Test house:")
+    print(f'Walls square -> {house.get_walls_square()}')
+    print(f'Windows square -> {house.get_windows_square()}')
+    print(f'Door square -> {house.get_door_square()}')
+    print(f'Actual number of wallpaper: {house.get_number_of_rolls_of_wallpapers(0.53, 10)}')
+    print(f'Except number of wallpaper: {22}')
+
 
