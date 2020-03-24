@@ -1,5 +1,6 @@
 import pytest
 import numpy as np
+import lonely_robot
 from lonely_robot import Robot, Asteroid, Obstacle, MissAsteroidError, RobotMovementError
 
 
@@ -31,10 +32,9 @@ class TestRobotCreation:
         assert obstacle.x == 10
         assert obstacle.y == 10
 
-
     # Check robot in asteroid landing, obstacle on asteroid creation
     @pytest.mark.parametrize(
-        "asteroid_size,robot_obstacle_coordinates",
+        "asteroid_size, robot_obstacle_coordinates",
         (
                 ((15, 25), (26, 30)),
                 ((15, 25), (26, 24)),
@@ -81,11 +81,10 @@ class Test_robot_movement:
     )
     def test_turn_right(self, current_direction, expected_direction):
         robot = Robot(self.x, self.y, self.asteroid, current_direction)
-        robot.direction = current_direction
         robot.turn_right()
         assert robot.direction == expected_direction
 
-    #Test move forward
+    # Test move forward
     @pytest.mark.parametrize(
         "current_direction, current_x, current_y, expected_x, expected_y",
         (
@@ -104,7 +103,7 @@ class Test_robot_movement:
             robot.check_position_movement()
             assert current_x == robot.x and current_y == robot.y
 
-    #Test move backward
+    # Test move backward
     @pytest.mark.parametrize(
         "current_direction, current_x, current_y, expected_x, expected_y",
         (
@@ -133,31 +132,27 @@ class Test_robot_scan_ability:
     asteroid.add_obstacle(Obstacle(2, 4))
     asteroid.add_obstacle(Obstacle(1, 1))
     robot = Robot(2, 3, asteroid, "S")
-    #map of the asteroid 5x5.
-    #legend: 0 - valley; 1 - obstacle; 2 - robot position
+    # map of the asteroid 5x5.
+    # legend: 0 - valley; 1 - obstacle; 2 - robot position
     map = np.array([[0, 0, 0, 1, 0],
                     [0, 1, 0, 0, 0],
                     [1, 1, 0, 2, 1],
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 1, 0]
-                   ], 'i')
+                    ], 'i')
 
     def test_spatial_scan(self):
-        #This method is test scanned asteroid map creation
+        # This method is test scanned asteroid map creation
         self.robot.scan_create_map()
         assert np.array_equal(self.robot.aster_map, self.map)
 
     def test_get_obstacle_on_view_direction(self):
         # This method is test finding of obstacles
         self.robot.set_direction("S")
-        assert self.robot.get_obstacle_on_view_direction() == [(0,3)]
+        assert self.robot.get_obstacle_on_view_direction() == [(0, 3)]
         self.robot.set_direction("N")
         assert self.robot.get_obstacle_on_view_direction() == [(4, 3)]
         self.robot.set_direction("E")
         assert self.robot.get_obstacle_on_view_direction() == [(2, 0), (2, 1)]
         self.robot.set_direction("W")
         assert self.robot.get_obstacle_on_view_direction() == [(2, 4)]
-
-
-
-

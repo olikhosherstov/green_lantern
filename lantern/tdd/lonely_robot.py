@@ -1,6 +1,4 @@
-import turtle
 import numpy as np
-from functools import partial
 
 
 class Obstacle:
@@ -20,13 +18,11 @@ class Asteroid:
         self.obstacles.append(obstacle)
 
     def check_obstacle_position(self, obstacle: Obstacle):
-        if self.x < obstacle.x or obstacle.x < 0:
-            raise MissAsteroidError()
-        if self.y < obstacle.y or obstacle.y < 0:
+        if any([self.x < obstacle.x, obstacle.x < 0, self.y < obstacle.y, obstacle.y < 0]):
             raise MissAsteroidError()
 
     def get_asteroid_size(self):
-        return [self.x, self.y]
+        return (self.x, self.y)
 
     def get_obstacle_count(self):
         # method return number of obstacles
@@ -71,15 +67,15 @@ class Robot:
 
     def check_position(self):
         # this method check if robot crashed during landing on asteroid
-        if self.x > self.asteroid.x or self.x < 0 or self.y > self.asteroid.y or self.y < 0:
+        if any([self.asteroid.x < self.x, self.x < 0, self.asteroid.y < self.y, self.y < 0]):
             raise MissAsteroidError()
-        for itm in self.asteroid.obstacles:
-            if self.x == itm.x and self.y == itm.y:
+        for block in self.asteroid.obstacles:
+            if all([self.x == block.x, self.y == block.y]):
                 raise MissAsteroidError()
 
     def check_position_movement(self):
         # this method check if robot crashed during landing on asteroid
-        if self.x > self.asteroid.x or self.x < 0 or self.y > self.asteroid.y or self.y < 0:
+        if any([self.asteroid.x < self.x, self.x < 0, self.asteroid.y < self.y, self.y < 0]):
             raise RobotMovementError(self)
         for itm in self.asteroid.obstacles:
             if self.x == itm.x and self.y == itm.y:
@@ -92,15 +88,15 @@ class Robot:
             self.aster_map[itm.x, itm.y] = 1
 
     def get_obstacle_on_view_direction(self):
-        #This method return obstacles on view direction
+        # This method return obstacles on view direction
         resalt = []
         if self.direction == "N":
             for i in np.where(self.aster_map[self.x:, self.y] == 1)[0]:
-                resalt.append((i + self.x,self.y))
+                resalt.append((i + self.x, self.y))
             return resalt
         if self.direction == "S":
             for i in np.where(self.aster_map[:self.x, self.y] == 1)[0]:
-                resalt.append((i,self.y))
+                resalt.append((i, self.y))
             return resalt
         if self.direction == "E":
             for i in np.where(self.aster_map[self.x, :self.y] == 1)[0]:
@@ -124,6 +120,3 @@ class RobotMovementError(Exception):
         self.robot.direction = dic_mov_error.get(self.robot.direction)
         self.robot.move_forward()
         self.robot.direction = dic_mov_error.get(self.robot.direction)
-
-
-
