@@ -1,5 +1,5 @@
 import numpy as np
-
+from functools import partial, lru_cache
 
 class Obstacle:
     def __init__(self, x, y):
@@ -62,6 +62,7 @@ class Robot:
         if any([self.asteroid.x < self.x, self.x < 0, self.asteroid.y < self.y, self.y < 0]):
             raise MissAsteroidError()
 
+    @lru_cache(maxsize=None)
     def check_for_block(self):
         for barrier in self.asteroid.obstacles:
             if all([self.x == barrier.x, self.y == barrier.y]):
