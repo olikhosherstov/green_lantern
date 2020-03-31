@@ -2,7 +2,7 @@ from typing import List
 import psycopg2
 
 
-def task_1_add_new_record_to_db(con) -> str:
+def task_1_add_new_record_to_db(con) -> None:
     """
     Add a record for a new customer from Singapore
     {
@@ -36,6 +36,8 @@ def task_1_add_new_record_to_db(con) -> str:
     # try:
     #     cur = con.cursor()
     #     cur.execute(sql,)
+    #cur.execute("SELECT * FROM customers WHERE customerid = (SELECT MAX(customerid) FROM customers)")
+    #vendor_id = cur.fetchone()[0] + 1
     #     con.commit()
     #     cur.close()
     # except (Exception, psycopg2.DatabaseError) as error:
@@ -48,14 +50,12 @@ def task_1_add_new_record_to_db(con) -> str:
     VALUES
     (%s, 'Thomas', 'David', 'Some Address', 'London', '774', 'Singapore') RETURNING customerid;
     """
-
     cur = con.cursor()
     cur.execute("SELECT * FROM customers WHERE customerid = (SELECT MAX(customerid) FROM customers)")
     vendor_id = cur.fetchone()[0] + 1
     cur.execute(sql, (vendor_id,))
     con.commit()
     return cur.fetchmany(92)
-
 
 def task_2_list_all_customers(cur) -> list:
     """
@@ -142,6 +142,7 @@ def task_6_list_all_supplier_countries(cur) -> list:
     cur.execute(sql)
     return cur.fetchmany(29)
 
+
 def task_7_list_supplier_countries_in_desc_order(cur) -> list:
     """
     List all supplier countries in descending order
@@ -188,10 +189,12 @@ def task_9_count_customers_by_country_with_than_10_customers(cur):
 
     """
     sql = """
-    SELECT COUNT(customername), country FROM customers GROUP BY country ORDER BY COUNT(customername) DESC, country
+    SELECT COUNT(customername), country 
+    FROM customers GROUP BY country HAVING COUNT(customername) > 10 ORDER BY COUNT(customername) DESC, country;
     """
     cur.execute(sql)
-    return cur.fetchmany(3)
+    return cur.fetchall()
+
 
 def task_10_list_first_10_customers(cur):
     """
@@ -200,7 +203,7 @@ def task_10_list_first_10_customers(cur):
     Results: 10 records
     """
     sql = """
-    SELECT * FROM customers
+    SELECT * FROM customers ORDER BY customerid
     """
     cur.execute(sql)
     return cur.fetchmany(10)
@@ -232,7 +235,8 @@ def task_12_list_suppliers_from_specified_countries(cur):
     Returns: 8 records
     """
     sql = """
-    SELECT supplierid, suppliername, contactname, city, country FROM suppliers WHERE Country = 'USA' or Country = 'UK' or Country = 'Japan'
+    SELECT supplierid, suppliername, contactname, city, country 
+    FROM suppliers WHERE country = 'USA' or country = 'UK' or country = 'Japan';
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -248,9 +252,9 @@ def task_13_list_products_from_sweden_suppliers(cur):
     Returns: 3 records
     """
     sql = """
-    SELECT products.productname FROM products, suppliers WHERE Country = 'Sweden' and  products.supplierid = suppliers.supplierid
+    SELECT productname FROM products, suppliers WHERE country = 'Sweden' and  products.supplierid = suppliers.supplierid
     """
-    cur.execute(sql)
+    cur.execute(sql,)
     return cur.fetchmany(3)
 
 
@@ -262,11 +266,11 @@ def task_14_list_products_with_supplier_information(cur):
         cur: psycopg cursor
 
     Returns: 77 records
-    ERROR CAN BEEN DUE TO NOT CORRECT DB LOCALE LC_MONETARY SETUP
     """
     sql = """
-    SELECT products.productid, products.productname, products.unit, products.price, suppliers.country, suppliers.city, suppliers.suppliername 
-    FROM products, suppliers WHERE products.supplierid = suppliers.supplierid
+    SET LOCAL lc_monetary = 'en_US.UTF-8'; 
+    SELECT products.productid, products.productname, products.unit, products.price, suppliers.country, suppliers.city, suppliers.suppliername
+    FROM products, suppliers WHERE products.supplierid = suppliers.supplierid;
     """
     cur.execute(sql)
     return cur.fetchmany(77)
@@ -288,12 +292,11 @@ def task_15_list_customers_with_any_order_or_not(cur):
   }
     """
     sql = """
-    SELECT customers.customername, customers.contactname, customers.country, orders.orderid
+    SELECT customername, contactname, country, orderid
     FROM customers, orders WHERE  customers.customerid = orders.customerid
     """
     cur.execute(sql)
     return cur.fetchmany(77)
-
 
 
 def task_16_match_all_customers_and_suppliers_by_country(cur):
