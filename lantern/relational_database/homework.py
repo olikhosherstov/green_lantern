@@ -146,7 +146,7 @@ def task_8_count_customers_by_city(cur):
     Returns: 69 records in descending order
     """
     sql = """
-    SELECT COUNT(customername), city FROM customers GROUP BY city ORDER BY city DESC;
+    SELECT COUNT(customerid), city FROM customers GROUP BY city ORDER BY city DESC;
     """
     cur.execute(sql)
 
@@ -164,9 +164,9 @@ def task_9_count_customers_by_country_with_than_10_customers(cur):
 
     """
     sql = """
-    SELECT COUNT(customername), country 
-    FROM customers GROUP BY country HAVING COUNT(customername) > 10 
-    ORDER BY COUNT(customername) DESC, country;
+    SELECT COUNT(customerid) as count, country 
+    FROM customers GROUP BY country HAVING COUNT(customerid) > 10 
+    ORDER BY count DESC, country;
     """
     cur.execute(sql)
     return cur.fetchall()
