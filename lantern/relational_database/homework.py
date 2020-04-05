@@ -20,19 +20,13 @@ def task_1_add_new_record_to_db(con) -> None:
     Returns: 92 records
 
     """
-    # forced insertion
-
-    sql = """
-    INSERT INTO customers (customerid, customername, contactname, address, city, postalcode, country)
-    VALUES
-    (%s, 'Thomas', 'David', 'Some Address', 'London', '774', 'Singapore') RETURNING customerid;
-    """
-    cur = con.cursor()
-    cur.execute("SELECT * FROM customers WHERE customerid = (SELECT MAX(customerid) FROM customers)")
-    vendor_id = cur.fetchone()[0] + 1
-    cur.execute(sql, (vendor_id,))
-    con.commit()
-    return cur.fetchall()
+    fields = "customername, contactname, address, city, postalcode, country"
+    table = "customers"
+    values = "(%s, %s, %s, %s, %s, %s)"
+    sql = (f"INSERT INTO {table} ({fields}) "
+           f"VALUES {values};")
+    with con.cursor() as cur:
+        cur.execute(sql, ("Thomas", "David", "Some Address", "London", "774", "Singapore"))
 
 def task_2_list_all_customers(cur) -> list:
     """
@@ -45,7 +39,8 @@ def task_2_list_all_customers(cur) -> list:
 
     """
     sql = """
-    SELECT * FROM customers;
+       SELECT * 
+       FROM customers;
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -61,10 +56,12 @@ def task_3_list_customers_in_germany(cur) -> list:
     Returns: 11 records
     """
     sql = """
-    SELECT * FROM customers WHERE country = 'Germany';
+       SELECT * 
+       FROM customers 
+       WHERE country = 'Germany';
     """
     cur.execute(sql)
-    return cur.fetchmany(11)
+    return cur.fetchall()
 
 
 def task_4_update_customer(con):
@@ -77,12 +74,14 @@ def task_4_update_customer(con):
 
     """
     sql = """
-    UPDATE customers SET customername = 'Johnny Depp' 
-    WHERE customerid = (SELECT MIN(customerid) FROM customers);
+         UPDATE customers
+         SET customername = 'Johnny Depp'
+         WHERE customerid =
+             (SELECT MIN(customerid)
+             FROM customers);
     """
-    cur = con.cursor()
-    cur.execute(sql)
-    con.commit()
+    with con.cursor() as cur:
+        cur.execute(sql)
     return
 
 
@@ -94,11 +93,14 @@ def task_5_delete_the_last_customer(con) -> None:
         con: psycopg connection
     """
     sql = """
-    DELETE FROM customers WHERE customerid = (SELECT MAX(customerid) FROM customers);
+        DELETE
+        FROM customers
+        WHERE customerid =
+            (SELECT MAX(customerid)
+            FROM customers);
     """
-    cur = con.cursor()
-    cur.execute(sql)
-    con.commit()
+    with con.cursor() as cur:
+        cur.execute(sql)
     return
 
 
@@ -113,7 +115,8 @@ def task_6_list_all_supplier_countries(cur) -> list:
 
     """
     sql = """
-    SELECT country FROM suppliers;
+        SELECT country 
+        FROM suppliers;
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -130,7 +133,9 @@ def task_7_list_supplier_countries_in_desc_order(cur) -> list:
 
     """
     sql = """
-    SELECT country FROM suppliers ORDER BY country DESC;
+        SELECT country 
+        FROM suppliers 
+        ORDER BY country DESC;
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -146,10 +151,13 @@ def task_8_count_customers_by_city(cur):
     Returns: 69 records in descending order
     """
     sql = """
-    SELECT COUNT(customername), city FROM customers GROUP BY city ORDER BY city DESC;
+        SELECT COUNT(customerid), 
+               city 
+        FROM customers 
+        GROUP BY city 
+        ORDER BY city DESC;
     """
     cur.execute(sql)
-
     return cur.fetchall()
 
 
@@ -164,9 +172,12 @@ def task_9_count_customers_by_country_with_than_10_customers(cur):
 
     """
     sql = """
-    SELECT COUNT(customername), country 
-    FROM customers GROUP BY country HAVING COUNT(customername) > 10 
-    ORDER BY COUNT(customername) DESC, country;
+        SELECT COUNT(customerid) AS COUNT,
+               country
+        FROM customers
+        GROUP BY country
+        HAVING COUNT(customerid) > 10
+        ORDER BY COUNT DESC, country;
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -179,7 +190,10 @@ def task_10_list_first_10_customers(cur):
     Results: 10 records
     """
     sql = """
-    SELECT * FROM customers ORDER BY customerid LIMIT 10;
+        SELECT *
+        FROM customers
+        ORDER BY customerid
+        LIMIT 10;
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -195,7 +209,10 @@ def task_11_list_customers_starting_from_11th(cur):
     Returns: 11 records
     """
     sql = """
-    SELECT * FROM customers WHERE customerid > 11;
+        SELECT *
+        FROM customers
+        ORDER BY customerid
+        OFFSET 11;
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -211,8 +228,15 @@ def task_12_list_suppliers_from_specified_countries(cur):
     Returns: 8 records
     """
     sql = """
-    SELECT supplierid, suppliername, contactname, city, country 
-    FROM suppliers WHERE country = 'USA' or country = 'UK' or country = 'Japan';
+        SELECT supplierid,
+               suppliername,
+               contactname,
+               city,
+               country
+        FROM suppliers
+        WHERE country IN ('USA',
+                          'UK',
+                          'Japan');
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -228,10 +252,13 @@ def task_13_list_products_from_sweden_suppliers(cur):
     Returns: 3 records
     """
     sql = """
-    SELECT productname FROM products, suppliers 
-    WHERE country = 'Sweden' and  products.supplierid = suppliers.supplierid;
+        SELECT productname 
+        FROM products
+        INNER JOIN suppliers
+        USING(supplierid)
+        WHERE country = 'Sweden';
     """
-    cur.execute(sql,)
+    cur.execute(sql)
     return cur.fetchall()
 
 
@@ -246,8 +273,16 @@ def task_14_list_products_with_supplier_information(cur):
     """
     sql = """
     SET LOCAL lc_monetary = 'en_US.UTF-8'; 
-    SELECT productid, productname, unit, price, country, city, suppliername
-    FROM products, suppliers WHERE products.supplierid = suppliers.supplierid;
+    SELECT productid, 
+           productname, 
+           unit, 
+           price, 
+           country, 
+           city, 
+           suppliername
+    FROM products
+    INNER JOIN suppliers 
+    USING(supplierid);
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -269,8 +304,13 @@ def task_15_list_customers_with_any_order_or_not(cur):
   }
     """
     sql = """
-    SELECT customername, contactname, country, orderid
-    FROM customers, orders WHERE  customers.customerid = orders.customerid;
+    SELECT customername, 
+           contactname, 
+           country, 
+           orderid
+    FROM customers
+    INNER JOIN orders 
+    USING(customerid);
     """
     cur.execute(sql)
     return cur.fetchall()
@@ -286,10 +326,15 @@ def task_16_match_all_customers_and_suppliers_by_country(cur):
     Returns: 194 records
     """
     sql = """
-    SELECT customername, a.address as address, a.country as customercountry, 
-    b.country as suppliercountry, b.suppliername 
-    FROM customers as a FULL JOIN suppliers as b ON a.country = b.country 
+    SELECT customername, 
+           a.address, 
+           a.country as customercountry, 
+           b.country as suppliercountry, 
+           b.suppliername 
+    FROM customers as a 
+    FULL JOIN suppliers as b 
+    USING(country)  
     ORDER BY customercountry, suppliercountry;
     """
     cur.execute(sql)
-    return cur.fetchmany(194)
+    return cur.fetchall()
