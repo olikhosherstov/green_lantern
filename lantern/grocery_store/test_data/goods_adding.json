@@ -1,0 +1,32 @@
+[
+  {
+   "name": "Chocolate bar", "price": 12.4
+  },
+  {
+    "name": "Ferero Roche", "price": 63.5
+  },
+  {
+    "name": "Rafaello", "price": 54.1
+  },
+  {
+    "name": "Waffers Milka", "price": 14.23
+  },
+  {
+    "name": "Coca Cola, 1.5L", "price": 21.52
+  },
+  {
+    "name": "Chocolate bar Roshen", "price": 21.5
+  },
+  {
+    "name": "Chocolate bar Svitoch", "price": 18.23
+  },
+  {
+    "name": "Ritter Sport", "price": 38.5
+  },
+  {
+    "name": "Cookies 'For koffe'", "price": 23.43
+  },
+  {
+    "name": "Bubble gum 'Dirol'", "price": 10.5
+  }
+]
