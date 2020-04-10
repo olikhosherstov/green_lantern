@@ -17,10 +17,6 @@ app = Flask(__name__)
 
 
 @app.errorhandler(NoSuchUserError)
-def user_error_handler(e):
-    return jsonify({'error': e.message}), 404
-
-
 @app.errorhandler(NoSuchStoreID)
 def store_error_handler(e):
     return jsonify({'error': e.message}), 404
@@ -65,7 +61,10 @@ def get_goods():
 def update_goods():
     db = inject.instance('DB')
     success, err = db.goods.update_goods(request.json)
-    return jsonify({'successfully updated': success, 'errors': {'no such id in goods': err}})
+    if err:
+        return jsonify({'successfully updated': success, 'errors': {'no such id in goods': err}})
+    else:
+        return jsonify({'successfully updated': success})
 
 
 @app.route('/stores', methods=['POST'])

@@ -58,7 +58,7 @@ class TestUsers(Initializer):
             (2, 404, {'error': 'No such manager with user_id 2'})
         )
     )
-    def test_successful_update_user(self, flask_request, status_code, flask_response):
+    def test_update_user(self, flask_request, status_code, flask_response):
         self.client.post(
             '/users',
             json={'name': 'John Doe'}
