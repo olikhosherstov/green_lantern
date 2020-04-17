@@ -58,6 +58,17 @@ class FakeGoods(Repository):
             {**item, 'id': item_id} for item_id, item in self._db.items()
         ]
 
+    def update_goods(self, items):
+        success = 0
+        err = []
+        for post in items:
+            if post["id"] in self._db:
+                self._db[post["id"]] = post
+                success += 1
+            else:
+                err.append(post["id"])
+        return success, err
+
 
 class FakeStores(Repository):
 
@@ -66,6 +77,11 @@ class FakeStores(Repository):
             return self._db[store_id]
         except KeyError:
             raise NoSuchStoreError(store_id)
+
+    def get_store_by_name(self, name: str):
+        for store_id,store_data in self._db.items():
+            if store_data['name'] == name:
+                return store_data
 
     def update_store_by_id(self, store_id, store):
         if store_id in self._db:
