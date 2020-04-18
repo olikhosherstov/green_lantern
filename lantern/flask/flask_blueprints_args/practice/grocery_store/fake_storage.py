@@ -40,6 +40,11 @@ class FakeUsers(Repository):
         except KeyError:
             raise NoSuchUserError(user_id)
 
+    def get_user_by_name(self, name: str):
+        for user_id, user_data in self._db.items():
+            if user_data['name'] == name:
+                return user_id, user_data['name']
+
     def update_user_by_id(self, user_id, user):
         if user_id in self._db:
             self._db[user_id] = user
