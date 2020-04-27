@@ -1,94 +1,86 @@
 import argparse
 import csv
-from random import randrange, choice
-from typing import List
-from time import sleep
+from random import randrange
+
 import requests
 
 
-class Fill_db:
-    def __init__(self, url, count, table):
-        #SetUp interface
-        self.url = url
-        self.count = count
-        self.table = table
-        #Fixtures for random user names
-        if self.table == 'users':
-            self.names: List = self.set_fixtures('names')
-            self.surnames: List = self.set_fixtures('surnames')
-            self.create_request(self.count)
-        #Fixtures for random goods
-        if self.table == 'goods':
-            self.colors: List = self.set_fixtures('colors')
-            self.clothes: List = self.set_fixtures('clothes')
-            self.size: List = self.set_fixtures('size')
-            self.create_request(1)
-        #Fixtures for random stores
-        if self.table == 'stores':
-            self.colors: List = self.set_fixtures('colors')
-            self.animals: List = self.set_fixtures('animals')
-            self.create_request(self.count)
+def data_sets(data_name: str):
+    with open(f'data/{data_name}.csv') as fill:
+        data_read = csv.reader(fill, delimiter=",")
+        return {int(line[0]): line[1] for line in data_read}
 
-    def set_fixtures(self, data_name: str) -> list:
-        with open(f'fixtures/{data_name}.csv') as fill:
-            data_read = csv.reader(fill, delimiter=",")
-            return [line[1] for line in data_read]
 
-    def rand_feature(self, source1: List, source2: List, source3: List) -> str:
-        return " ".join([choice(source1), choice(source2), choice(source3)]).strip()
+def add_users(url: str, count_user):
+    names = data_sets("names")
+    surnames = data_sets("surnames")
+    rand_name = lambda x_name, y_surname: " ".join([x_name.get(randrange(1, 65), 1),
+                                                    y_surname.get(randrange(1, 277), 1)])
+    try:
+        if requests.post(url, json={'name': rand_name(names, surnames)}).status_code == 201:
+            for i in range(count_user):
+                # Can been 17728 different combinations
+                data = rand_name(names, surnames)
+                requests.post(url, json={'name': data})
+                print(data)
+            print(f"Sended to server {i + 1} requests.")
+        else:
+            print("Invalid table.")
+    except ConnectionRefusedError:
+        print(f"Server {url} is not connected. Try another URL.")
 
-    def create_request(self, count):
-        i = 0
-        flag = 0
-        while i <= count:
-            if self.table == 'users':
-                request_data = self.make_user()
-            elif self.table == 'goods':
-                request_data = self.make_goods()
-            else:
-                request_data = self.make_store()
-            try:
-                resp = requests.post(self.url, json=request_data)
-                if resp.status_code not in (200, 201):
-                    print('Invalid table for fill or server error.')
-                else:
-                    i += 1
-            except ConnectionRefusedError as e:
-                print(type(e))
-                print(f"Server {self.url} is disconnected. Try reconnect.")
-                sleep(3)
-                flag += 1
-                if flag == 4:
-                    raise ValueError(f'Requested server {self.url} is down.')
-            print(f"Sended to server 1 requests.")
-        print(f"Sended to server {i} requests.")
 
-    def make_user(self):
-        return {"name": self.rand_feature(self.names, self.surnames, [''])}
+def add_goods(url: str, count_goods):
+    colors = data_sets("colors")
+    clothes = data_sets("clothes")
+    size = data_sets("size")
+    post_goods = []
+    rand_name = lambda x, y, z: " ".join([x.get(randrange(1, 151), 1),
+                              y.get(randrange(1, 78), 1),
+                              z.get(randrange(1, 9), 1)]
+                             )
+    for i in range(count_goods):
+        # Can been 106002 different combinations
+        post_goods.append({'name': rand_name(colors, clothes, size), 'price': randrange(1, 100)})
+    try:
+        resp = requests.post(url, json=post_goods)
+        if resp.status_code == 201:
+            print(f"Sended to server serial data with {resp.json()['numbers of items created']} goods.")
+        else:
+            print("Invalid table.")
+    except ConnectionRefusedError:
+        print(f"Server {url} is not connected. Try another URL.")
 
-    def make_goods(self):
-        post_goods = []
-        for i in range(self.count):
-            post_goods.append({
-                               'name': self.rand_feature(self.colors,
-                                                         self.clothes,
-                                                         self.size),
-                               'price': randrange(1, 100)
-                               })
-        return post_goods
 
-    def make_store(self):
-        return {
-                'name': self.rand_feature(self.colors, self.animals, ['']),
-                'location': 'Lviv',
-                'manager_id': 1
-                }
+def add_store(url: str, count_stores):
+    colors = data_sets("colors")
+    animals = data_sets("animals")
+    rand_name = lambda x, y: " ".join([x.get(randrange(1, 151), 1), y.get(randrange(1, 51), 1)])
+    try:
+        resp = requests.post(url, json={'name': rand_name(colors, animals),
+                                        'location': 'Lviv', 'manager_id': 1})
+        if resp.status_code == 201:
+            for i in range(count_stores):
+                # Can been 7500 different combinations
+                post_store = {'name': rand_name(colors, animals), 'location': 'Lviv', 'manager_id': 1}
+                requests.post(url, json=post_store)
+                print(post_store)
+            print(f"Sended to server {i + 1} requests.")
+        else:
+            print("Invalid table or users not added.")
+    except ConnectionRefusedError:
+        print(f"Server {url} is not connected. Try another URL.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("url", help="url for request")
     parser.add_argument("count", help="count of users", type=int)
-    parser.add_argument("table", help="table for add, 'users', 'goods', 'stores'")
+    parser.add_argument("table", help="table for add, USERS, GOODS, STORES")
     args = parser.parse_args()
-    filler = Fill_db(args.url+args.table, args.count, args.table)
+    if args.table == "users":
+        add_users(args.url + "/users", args.count)
+    elif args.table == "goods":
+        add_goods(args.url + "/goods", args.count)
+    elif args.table == "stores":
+        add_store(args.url + "/stores", args.count)
