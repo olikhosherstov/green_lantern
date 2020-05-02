@@ -1,4 +1,16 @@
 env/
+venv/
 __pycache__/
 *.pyc
 .idea/
+_windows/
+codestyles/
+inspection/
+color.scheme.xml
+dbnavigator.xml
+editor.xml
+file_for_changes.txt
+filetypes.xml
+markdown.xml
+studioSettings.xml
+vcs.xml
