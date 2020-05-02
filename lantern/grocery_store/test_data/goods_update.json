@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Chocolate bar", "price": 14, "id": 1
+  },
+  {
+    "name": "Ferero Roche", "price": 65, "id": 2
+  },
+  {
+    "name": "Rafaello", "price": 54, "id": 3
+  },
+  {
+    "name": "Waffers Milka", "price": 25, "id": 4
+  },
+  {
+    "name": "Coca Cola, 2L", "price": 24,"id": 12
+  },
+  {
+    "name": "Chocolate bar Roshen", "price": 18, "id": 6
+  },
+  {
+    "name": "Chocolate bar SvitochXL", "price": 13, "id": 13
+  },
+  {
+    "name": "Bubble gum Orbit", "price": 9.5, "id": 14
+  }
+]
