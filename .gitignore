@@ -5,6 +5,7 @@ __pycache__/
 .idea/
 _windows/
 codestyles/
+<<<<<<< HEAD
 inspection/
 color.scheme.xml
 dbnavigator.xml
@@ -14,3 +15,16 @@ filetypes.xml
 markdown.xml
 studioSettings.xml
 vcs.xml
+=======
+colors.scheme.xml
+dbnavigator.xml
+debugger.xml
+editor.xml
+inspection/
+venv/
+markdown.xml
+studioSettings.xml
+vcs.xml
+filetypes.xml
+*.gitignore
+>>>>>>> e6737f0753107c3ebb27b8d61a6ea5aa0f82c860
