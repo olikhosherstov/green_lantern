@@ -1,8 +1,31 @@
 import inject
+<<<<<<< HEAD
 from flask import Blueprint, request, jsonify
+=======
+from flask import request
+from flask_restful import Resource
 
-stores_bl = Blueprint("stores", __name__)
 
+class Store(Resource):
+
+    def get(self, store_id):
+        db = inject.instance('DB')
+        store = db.stores.get_store_by_id(store_id)
+        return store
+
+    def post(self):
+        db = inject.instance('DB')
+        store_id = db.stores.add(request.json)
+        return {'store_id': store_id}, 201
+
+    def put(self, store_id):
+        db = inject.instance('DB')
+        db.stores.update_store_by_id(store_id, request.json)
+        return {'status': 'success'}
+>>>>>>> 2961b5c07e4406801602b17195f5a205e9d146f4
+
+
+<<<<<<< HEAD
 
 @stores_bl.route('/store', methods=['POST'])
 def create_store():
@@ -53,3 +76,5 @@ class Store(Resource):
         db.stores.update_store_by_id(store_id, request.json)
         return {'status': 'success'}
 
+=======
+>>>>>>> 2961b5c07e4406801602b17195f5a205e9d146f4

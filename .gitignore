@@ -2,3 +2,16 @@ env/
 __pycache__/
 *.pyc
 .idea/
+_windows/
+codestyles/
+colors.scheme.xml
+dbnavigator.xml
+debugger.xml
+editor.xml
+inspection/
+venv/
+markdown.xml
+studioSettings.xml
+vcs.xml
+filetypes.xml
+*.gitignore
