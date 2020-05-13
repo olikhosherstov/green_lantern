@@ -4,6 +4,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 FIXTURES_DIR = os.path.join(ROOT_DIR, 'fixtures')
 
 class Config:
+    HOST = 'localhost'
     PG_USER = "cursor"
     PG_PASSWORD = "very_secret_password"
     PG_HOST = "localhost"
