@@ -5,3 +5,18 @@ users_structure = {
     "name": fields.String,
     "email": fields.String,
 }
+
+goods_structure = {
+    "good_id": fields.Integer,
+    "brand": fields.String,
+    "name": fields.String,
+    "price": fields.Integer
+}
+
+stores_structure = {
+    "store_id": fields.Integer,
+    "name": fields.String,
+    "city": fields.String,
+    "address": fields.String,
+    "manager_id": fields.Integer
+}
