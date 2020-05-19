@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_migrate import MigrateCommand
 from flask_script import Server, Manager
-
+from flask_login import LoginManager
 from grocery_store.config import Config
 from grocery_store.routes import users, goods, stores, auth, main
 from grocery_store.database import db
 from grocery_store.commands import Populate
+from grocery_store.models import User
 
 
 def make_app():
@@ -30,3 +31,13 @@ def make_manager(app):
     manager.add_command('db', MigrateCommand)
     manager.add_command('populate', Populate)
     return manager
+
+
+def make_login_manager(app):
+    login_manager = LoginManager()
+    login_manager.login_view = "auth.login"
+    login_manager.init_app(app)
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
+    return login_manager

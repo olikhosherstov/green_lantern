@@ -1,11 +1,11 @@
 import datetime
-
+from flask_login import UserMixin
 from sqlalchemy import DateTime
 
 from grocery_store.database import db
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True)
@@ -16,6 +16,8 @@ class User(db.Model):
     def __repr__(self):
         return f"<id: {self.user_id}, name: {self.name}, email: {self.email}>"
 
+    def get_id(self):
+        return self.user_id
 
 class Good(db.Model):
     __tablename__ = "goods"

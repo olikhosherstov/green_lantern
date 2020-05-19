@@ -1,4 +1,5 @@
 import os
+from grocery_store.install import get_passwd
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 FIXTURES_DIR = os.path.join(ROOT_DIR, 'fixtures')
@@ -7,9 +8,9 @@ FIXTURES_DIR = os.path.join(ROOT_DIR, 'fixtures')
 class Config:
     HOST = 'localhost'
     PORT = 5000
-    SECRET_KEY = 'aa01018c-c962-46c4-8087-c229c7e36c59'
+    SECRET_KEY = get_passwd('secret_key')
     PG_USER = "cursor"
-    PG_PASSWORD = "very_secret_password"
+    PG_PASSWORD = get_passwd('cursor_sqlalchemy_db')
     PG_HOST = "localhost"
     PG_PORT = 5432
     DB_NAME = "cursor_sqlalchemy_db"
