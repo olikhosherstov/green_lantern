@@ -70,6 +70,7 @@ class PopulateOrders(Command):
             users = User.query.all()
             goods = Good.query.all()
             stores = Store.query.all()
+#            import pdb; pdb.set_trace()
             for user in users:
                 number_of_orders = randint(1, 5)
                 for _ in range(number_of_orders):
