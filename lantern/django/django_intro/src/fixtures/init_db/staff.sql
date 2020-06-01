@@ -1,0 +1,10 @@
+CREATE TABLE Staff (
+	StaffID SERIAL PRIMARY KEY,
+	LastName VARCHAR(50) NOT NULL,
+	FirstName VARCHAR(50) NOT NULL,
+	BirthDate DATE,
+	Profession VARCHAR(25) NOT NULL,
+	Skill VARCHAR(25),
+	Salary REAL CHECK(Salary > 0),
+	RestaurantID INT REFERENCES Restaurant(RestaurantID) ON DELETE CASCADE
+	);
