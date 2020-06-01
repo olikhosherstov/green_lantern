@@ -1,4 +1,5 @@
 import inject
+import pytest, json
 
 from fake_storage import FakeStorage
 from store_app import make_app
@@ -88,6 +89,20 @@ class TestGoods(Initializer):
             {'name': 'Toilet paper', 'price': 3000, 'id': 3},
         ]
 
+    def test_update_goods(self):
+        with open('test_data/goods_adding.json') as fill:
+            self.client.post(
+                '/goods',
+                json=json.load(fill)
+            )
+        with open('test_data/goods_update.json') as upd:
+            resp = self.client.put(
+                '/goods',
+                json=json.load(upd)
+            )
+        assert resp.status_code == 200
+        assert resp.json == {'successfully updated': 5, 'errors': {'no such id in goods': [12, 13, 14]}}
+
 
 class TestStore(Initializer):
     def test_succes_post_store(self):
@@ -99,7 +114,7 @@ class TestStore(Initializer):
         assert resp.json == {'user_id': 1}
 
         resp = self.client.post(
-            '/store',
+            '/stores',
             json={'name': 'Mad Cow',
                   'location': 'Lviv',
                   'manager_id': 1}
@@ -117,7 +132,7 @@ class TestStore(Initializer):
         assert resp.json == {'error': 'No such user_id 2'}
 
         resp = self.client.post(
-            '/store',
+            '/stores',
             json={'name': 'Mad Cow',
                   'location': 'Lviv',
                   'manager_id': 2}
@@ -131,17 +146,17 @@ class TestStore(Initializer):
             json={'name': 'John Doe'}
         )
         resp = self.client.post(
-            '/store',
+            '/stores',
             json={'name': 'Mad Cow', 'location': 'Lviv', 'manager_id': 1}
         )
         store_id = resp.json['store_id']
-        resp = self.client.get(f'/store/{store_id}')
+        resp = self.client.get(f'/stores/{store_id}')
 
         assert resp.status_code == 200
         assert resp.json == {'name': 'Mad Cow', 'location': 'Lviv', 'manager_id': 1}
 
     def test_get_unexist_store(self):
-        resp = self.client.get(f'/store/1')
+        resp = self.client.get(f'/stores/1')
         assert resp.status_code == 404
         assert resp.json == {'error': 'No such store_id 1'}
 
@@ -154,14 +169,14 @@ class TestStore(Initializer):
         user_id = resp_user.json['user_id']
 
         resp_store = self.client.post(
-            '/store',
+            '/stores',
             json={'name': 'Mad Cow', 'location': 'Lviv', 'manager_id': user_id}
         )
 
         store_id = resp_store.json['store_id']
         print(store_id)
         resp_store = self.client.put(
-            f'/store/{store_id}',
+            f'/stores/{store_id}',
             json={'name': 'Mad Deer', 'location': 'Kiev', 'manager_id': user_id}
         )
         print(resp_store)
