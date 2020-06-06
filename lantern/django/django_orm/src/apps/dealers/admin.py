@@ -1,3 +1,17 @@
 from django.contrib import admin
+from apps.dealers.models import Dealer, City, Country
 
-# Register your models here.
+
+@admin.register(Dealer)
+class DealerAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
