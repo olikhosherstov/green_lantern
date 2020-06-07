@@ -82,17 +82,10 @@ class CarEngine(models.Model):
 
 
 class FuelType(models.Model):
-    name = models.CharField(max_length=12)
+    name = models.CharField(max_length=12, unique=True)
 
     class Meta:
         ordering = ('name',)
-        indexes = [
-            Index(fields=('name',)),
-            ]
-        constraints = [
-            UniqueConstraint(fields='name', name='unique-fuel-type')
-            ]
-
         verbose_name = _('Fuel Type')
         verbose_name_plural = _('Fuel Types')
 
