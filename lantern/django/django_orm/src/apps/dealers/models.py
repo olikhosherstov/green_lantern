@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Index
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 
@@ -55,6 +55,3 @@ class Dealer(User):
         verbose_name = _('Dealer')
         verbose_name_plural = _('Dealers')
 
-
-class NewsLetter(models.Model):
-    email = models.EmailField(max_length=50, unique=True)
