@@ -1,4 +1,3 @@
-import inject
 
 from store_app import make_app
 

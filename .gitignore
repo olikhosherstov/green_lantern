@@ -1,5 +1,4 @@
 env/
-venv/
 __pycache__/
 *.pyc
 .idea/
@@ -9,4 +8,3 @@ __pycache__/
 .DS_Store
 ./**/.data/
 lantern/django/django_intro/docker/envs/.**
-
