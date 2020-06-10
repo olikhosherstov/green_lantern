@@ -30,7 +30,7 @@ class Country(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'country'
+        dbTable = 'country'
 
 
 class City(models.Model):
@@ -40,7 +40,7 @@ class City(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'city'
+        dbTable = 'city'
 
 
 class Menu(models.Model):
@@ -49,7 +49,7 @@ class Menu(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'menu'
+        dbTable = 'menu'
 
 
 class Dish(models.Model):
@@ -61,7 +61,7 @@ class Dish(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'dish'
+        dbTable = 'dish'
 
 
 class RestaurantMenu(models.Model):
@@ -70,7 +70,7 @@ class RestaurantMenu(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'RestaurantMenu'
+        dbTable = 'RestaurantMenu'
 
 
 class Restaurant(models.Model):
@@ -83,7 +83,7 @@ class Restaurant(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'restaurant'
+        dbTable = 'restaurant'
 
 
 class Staff(models.Model):
@@ -98,4 +98,4 @@ class Staff(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'staff'
+        dbTable = 'staff'
