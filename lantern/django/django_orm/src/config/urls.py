@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 
+from apps.cars.views import CarList
 from apps.newsletter.views import NewsLetterView
 from common.views import LoginView, logout_view
 
@@ -28,6 +29,7 @@ urlpatterns = [
     path('newsletter/', NewsLetterView.as_view(), name='newsletter'),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", logout_view, name="logout"),
+    path('cars/', CarList.as_view()),
 ]
 
 if settings.DEBUG:
