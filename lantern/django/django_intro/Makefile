@@ -16,4 +16,4 @@ test_user:
 	@docker exec -it -w /django_intro django_intro_api python src/manage.py createsuperuser
 
 test:
-	@docker exec -it -w /django_intro django_intro_api python src/manage.py test $(name)
+	@docker exec -it -w /django_intro django_intro_api python src/manage.py test 
