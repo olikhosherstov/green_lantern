@@ -1,4 +1,0 @@
-CREATE TABLE Menu (
-    MenuID SERIAL PRIMARY KEY NOT NULL,
-    MenuName VARCHAR(50) NOT NULL
-    );
