@@ -1,0 +1,5 @@
+CREATE TABLE City (
+    CityID SERIAL PRIMARY KEY NOT NULL,
+    CityName VARCHAR(50) NOT NULL,
+    CountryId INT REFERENCES Country(CountryID) ON DELETE RESTRICT
+    );
