@@ -11,6 +11,7 @@ class Tag(models.Model):
 class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     title = models.CharField(max_length=100, verbose_name='title', db_index=True)
     body = models.TextField(max_length=5000, verbose_name='body')
     tags = models.ManyToManyField(to='Tag', related_name='tag', blank=True)
@@ -20,5 +21,4 @@ class Article(models.Model):
         on_delete=models.SET_NULL,
         related_name='author'
     )
-
 
