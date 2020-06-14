@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of articles</title>
+</head>
+<body>
+
+<h1 align="center">List of articles</h1>
+
+<table align="center">
+    <tr>
+        <th>Article number</th>
+        <th>Title of article</th>
+    </tr>
+    {% if object_list %}
+    {% for post in object_list %}
+    <tr>
+        <th>{{ post.id }}</th>
+        <th>{{ post.title }}</th>
+    </tr>
+    {% endfor %}
+    {% endif %}
+</table>
+
+</body>
+</html>
