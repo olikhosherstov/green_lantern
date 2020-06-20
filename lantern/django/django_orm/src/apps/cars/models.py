@@ -64,16 +64,11 @@ class CarModel(models.Model):
 
 
 class CarEngine(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, unique=True)
 
     class Meta:
         ordering = ('name',)
-        indexes = [
-            Index(fields=('name',)),
-            ]
-        constraints = [
-            UniqueConstraint(fields='name', name='unique-car-engine')
-            ]
+        indexes = [Index(fields=('name',)),]
         verbose_name = _('Car Engine')
         verbose_name_plural = _('Car Engines')
 
@@ -145,7 +140,7 @@ class Car(BaseDateAuditModel):
 
     @property
     def title(self):
-        return f'{self.Model.brand} {self.extra_title or ""}'  # do not show None
+        return f'{self.model.brand} {self.extra_title or ""}'  # do not show None
 
     def __str__(self):
         return self.title
