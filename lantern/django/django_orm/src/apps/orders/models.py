@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models import Index
 from django.utils.translation import gettext_lazy as _
-from phone_field import PhoneField
 
 
 class Order(models.Model):
@@ -18,11 +17,11 @@ class Order(models.Model):
     )
 
     car = models.ForeignKey('cars.Car', on_delete=models.CASCADE)
-    status = models.CharField(max_length=7, choices=STATUS_CHOICES, default=STATUS_EXPECT)
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=STATUS_EXPECT)
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=70)
-    phone = PhoneField(blank=True, help_text='Contact phone number')
+    phone = models.CharField(max_length=25)
     message = models.CharField(max_length=255)
 
     class Meta:

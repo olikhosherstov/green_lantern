@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.views.generic import TemplateView
 
+from apps.cars.views import CarListView
+from apps.orders.views import OrderCreateView
+from apps.photos.views import UploadPhotosView
 from apps.newsletter.views import NewsLetterView
 from common.views import LoginView, logout_view
 
@@ -28,6 +32,10 @@ urlpatterns = [
     path('newsletter/', NewsLetterView.as_view(), name='newsletter'),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", logout_view, name="logout"),
+    path('cars/', CarListView.as_view(), name="cars"),
+    path('cars/<int:pk>/', CarListView.as_view()),
+    path('cars_photos/', login_required(UploadPhotosView.as_view())),
+    path('create_order/', login_required(OrderCreateView.as_view())),
 ]
 
 if settings.DEBUG:

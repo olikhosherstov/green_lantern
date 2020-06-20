@@ -24,7 +24,7 @@ class CarBrandAdmin(admin.ModelAdmin):
 
 
 @admin.register(CarEngine)
-class CarModelAdmin(admin.ModelAdmin):
+class CarEngineAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 

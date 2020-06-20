@@ -1,0 +1,24 @@
+{% extends "cars/cars_base.html" %}
+
+{% block content %}
+    <h1 align="center">Cars List</h1>
+    <table align="center">
+        <tr>
+            <td>Dialer</td>
+            <td>Car brand</td>
+            <td>Car model</td>
+            <td>Car color</td>
+            <td>Created at</td>
+        </tr>
+        {% for car in object_list %}
+        <tr>
+            <td>{{ car.dealer }}</td>
+            <td>{{ car.model.brand }}</td>
+            <td>{{ car.model }}</td>
+            <td>{{ car.color }}</td>
+            <td>{{ car.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
